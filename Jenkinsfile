@@ -32,13 +32,35 @@ pipeline{
                 }
             }
         }  
-       stage('Quality Gate Status'){
+        stage('Quality Gate Status'){
             steps{
                 script{
                     waitForQualityGate abortPipeline: false, credentialsId: 'sonar-api'
                 } 
             }
-        }        
+        }  
+        stage('Upload jar file to Nexus')
+            steps{
+                script{
+                    nexusArtifactUploader artifacts: 
+                    [
+                        [artifactId: 'springboot', 
+                        classifier: '', 
+                        file: 'Uber.jar', 
+                        type: 'jar']
+                        ], 
+
+                    credentialsId: 'nexus-auth', 
+                    groupId: 'com.example', 
+                    nexusUrl: '10.0.8.74:8081', 
+                    nexusVersion: 'nexus3', 
+                    protocol: 'http', 
+                    repository: 'demo-app-release', 
+                    version: '1.0.0'
+                }
+            }        
+    }
+}
 
 /*        stage('Static Code Analysis'){
             steps{
@@ -48,14 +70,4 @@ pipeline{
                     }                    
                 }
             }
-        }/*
-
-/*        stage('Quality Gate Status'){
-            steps{
-                script{
-                    waitForQualityGate abortPipeline: false, credentialsId: 'sonar-api'
-                } 
-            }
-        }*/                    
-    }
-}
+        }/*  
