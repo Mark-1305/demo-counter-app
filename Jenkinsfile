@@ -39,7 +39,7 @@ pipeline{
                 } 
             }
         }  
-        stage('Upload jar file to Nexus')
+        stage('Upload jar file to Nexus'){
             steps{
                 script{
                     nexusArtifactUploader artifacts: 
@@ -58,16 +58,7 @@ pipeline{
                     repository: 'demo-app-release', 
                     version: '1.0.0'
                 }
-            }        
+            }
+        }        
     }
 }
-
-/*        stage('Static Code Analysis'){
-            steps{
-                script{
-                withSonarQubeEnv(credentialsId: 'sonar-api', installationName: 'sonarqube') {
-                    sh "mvn clean package sonar:sonar"
-                    }                    
-                }
-            }
-        }/*  
